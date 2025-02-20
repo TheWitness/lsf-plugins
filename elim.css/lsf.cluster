@@ -1,0 +1,6 @@
+Begin ResourceMap
+RESOURCENAME  LOCATION
+cssAvg        [default]
+cssMin        [default]
+cssMax        [default]
+End ResourceMap

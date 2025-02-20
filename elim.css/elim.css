@@ -7,28 +7,75 @@
 #          scheduling thresholds.
 #
 # Author:  Larry Adams <adamsla@us.ibm.com>
+#          Larry Adams <thewitness@cacti.net>
 #
 # --------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------
-# Change the one variable below to match lsf.shared
+# This elim will track context switches per second and report out every
+# few seconds the max, min, and average context switches per second.
+# This data is mostly to be used for tracking hosts that are overloaded
+# which can cause JITTER inside of an HPC cluster.  RTM can be used then
+# to review the jobs generating the JITTER for corrective action.  Corrective
+# actions can include: Requesting more CPUs, Requesting more memory,
+# Requesting exclusive use of the host using various methods.
 # --------------------------------------------------------------------------
-sleep=60
 
-last_css=
+# --------------------------------------------------------------------------
+# Modify these two values to match your requirements. Ensure that
+# the report_time is exually divisible by the sleep_time.
+# --------------------------------------------------------------------------
+sleep_time=2
+report_time=60
+
+# --------------------------------------------------------------------------
+# If debugging uncomment the following line
+# --------------------------------------------------------------------------
+# set -x
+
+# --------------------------------------------------------------------------
+# Keep everything below this line fixed.
+# --------------------------------------------------------------------------
+
+report_loops=$(($report_time/$sleep_time))
+last_css=-1
+init_css=-1
+avg_css=0
+min_css=-1
+max_css=0
+cur_loops=0
 
 while true;do
-  if [ -z "$last_css" ]; then
-    last_css=`grep ctxt /proc/stat | awk '{print $2}'`
+  css=$(grep ctxt /proc/stat | awk '{print $2}')
+  if [ $last_css -eq -1 ]; then
+	init_css=$css
+    #echo "3 cssMin 0 cssMax 0 cssAvg 0"
     echo "0 "
   else
-    css=`grep ctxt /proc/stat | awk '{print $2}'`
     diffcss=$(($css-$last_css))
-    out_css=$(($diffcss/$sleep))
-    last_css=$css
-    echo "1 css $out_css"
+    cur_css=$(($diffcss/$sleep_time))
+
+    if [ $cur_loops == $report_loops ]; then
+      avg_css=$((($css-$init_css)/$report_time))
+      echo "3 cssMin $min_css cssMax $max_css cssAvg $avg_css"
+      min_css=-1
+      max_css=0
+      avg_css=0
+      cur_loops=0
+	  init_css=$css
+    else
+      if [ $cur_css -gt $max_css ]; then
+        max_css=$cur_css
+      elif [ $cur_css -lt $min_css -o $min_css -eq -1 ]; then
+        min_css=$cur_css
+      fi
+
+      cur_loops=$(($cur_loops+1))
+    fi
   fi
 
-  sleep $sleep
+  last_css=$css
+
+  sleep $sleep_time
 done
 

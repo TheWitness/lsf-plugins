@@ -14,19 +14,32 @@ The context switches ELIM can be used for the following purposes:
 
 For example, you can do the following:
 
-	bsub -R "order[css]" ./a.out
+	bsub -R "order[cssMin]" ./a.out
 
 Which would dispatch to the host with the lowest number of context switches.  Additionally, you could do the following:
 
-	bsub -R "select[css<1000]" ./a.out
+	bsub -R "select[cssAvg<1000]" ./a.out
 
-The bsub above would only select hosts that have an css of less than 1000 context switches per second to dispatch to.
+The bsub above would only select hosts that have an average css of less than 1000 context switches per second to dispatch to.
 
 ## Installation Instructions
 
-To install this ELIM, you must first add the "css" numeric resource to LSF as per the normal process which involves updating your lsf.shared and lsf.cluster files to include the value.  Ensure that you assign this resource to hosts your UNIX/Linux hosts.
+To install this ELIM, you must first add the the numeric resource to LSF as per the normal process which involves updating your lsf.shared and lsf.cluster files to include the values.  Ensure that you assign this resource to hosts your UNIX/Linux hosts.
 
-Then, before restarting the cluster, make sure that the elim.css binary has been copied to the $LSF_SERVERDIR for all compute hosts and marked executable.  After which, you can restart your cluster using:
+The numeric resources to add are shown in the example lsf.shared file and lsf.cluster example files included in this repo.  They include:
+
+cssMin = The minumum context switches per second in the reporting period
+cssMax = The maximum context switches per second in the reporting period
+cssAvg = The average context switches per second in the reporting period
+
+Then, before restarting the cluster, make sure that the elim.css binary has been copied to the $LSF_SERVERDIR for all compute hosts and marked executable.  Additionally, there are two variables in the elim.css that can be modified that affect the granularity of the data.  They are:
+
+sleep_time = 2 seconds, the time between checks of the data
+report_time = 60 seconds, the time between reporting min, max, and average data to LSF
+
+If you change either of these settings, make sure that you update the lsf.shared file to reflect the new report_time setting.
+
+After which, you can restart your cluster using:
 
 	lsadmin reconfig
 	badmin reconfig
@@ -35,7 +48,7 @@ Make sure you restart all LIM's and not just the Master LIM.  From each compute 
 
 You can also get the context switches per second of your hosts by running the following lsload command:
 
-	lsload -o "css"
+	lsload -o "cssAvg cssMin cssMax" -json
 
 ## Community Contribution Requirements
 
