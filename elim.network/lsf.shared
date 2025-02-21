@@ -1,0 +1,10 @@
+Begin Resource
+RESOURCENAME  TYPE     INTERVAL INCREASING CONSUMABLE DESCRIPTION
+netInMin      Numeric  60       Y          ()         (Minimum Inbound Network Bytes per Second)
+netInMax      Numeric  60       Y          ()         (Maximum Inbound Network Bytes per Second)
+netInAvg      Numeric  60       Y          ()         (Average Inbound Network Bytes per Second)
+netOutMin     Numeric  60       Y          ()         (Minimum Outbound Network Bytes per Second)
+netOutMax     Numeric  60       Y          ()         (Maximum Outbound Network Bytes per Second)
+netOutAvg     Numeric  60       Y          ()         (Average Outbound Network Bytes per Second)
+End Resource
+

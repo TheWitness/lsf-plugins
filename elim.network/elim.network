@@ -1,0 +1,113 @@
+#!/bin/bash
+# --------------------------------------------------------------------------
+# Name:    elim.css
+#
+# Purpose: LSF ELIM reports the hosts default route bytes in and out
+#          metrics can be used for reporting, sorting, or creating
+#          scheduling thresholds.
+#
+# Author:  Larry Adams <thewitness@cacti.net>
+#
+# --------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------
+# This elim will track bytes in and out for the default interface in bytes
+# per second.  It calculates the max, min, and average metrics for each.
+#
+# This data is mostly to be used for tracking a hosts network utilization
+# so that it can be easily tracked in Spectrum LSF RTM and to be used to 
+# monitor either a single jobs use of the network, or an entire
+# hosts use of various applications depending on the batch system setup.
+# --------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------
+# Modify these two values to match your requirements. Ensure that
+# the report_time is exually divisible by the sleep_time.
+#
+# If you are performing collection in RTM at a 5 minute interval, it's
+# better that the report_time be 300 seconds.  If you are collecting at a
+# on minute interval, make this value 60 seconds.
+# --------------------------------------------------------------------------
+sleep_time=2
+report_time=60
+
+#-------------------------------------------------------------------------------
+# Uncomment below to view debug information
+#-------------------------------------------------------------------------------
+# set -xv
+
+#-------------------------------------------------------------------------------
+# You should not need to modify anything below this line.
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Get the default route.  In most cases, this is where the outbound
+# network traffic is directed.
+#-------------------------------------------------------------------------------
+interface=$(route | grep default | awk '{print $8}')
+report_loops=$(($report_time/$sleep_time))
+
+#-------------------------------------------------------------------------------
+# Set global variables for tracking
+#-------------------------------------------------------------------------------
+last_bi=-1
+last_bo=-1
+init_bi=-1
+init_bo=-1
+netInMin=-1
+netInMax=0
+netInAvg=0
+netOutMin=-1
+netOutMax=0
+netOutAvg=0
+cur_loops=0
+
+while true; do
+  stats=$(cat /proc/net/dev | egrep "$interface:")
+
+  current_bi=$(echo $stats | awk '{print $2}')
+  current_bo=$(echo $stats | awk '{print $10}')
+
+  if [ $last_bi -eq -1 ]; then
+    echo "0 "
+    init_bi=$current_bi
+    init_bo=$current_bo
+  else
+    diff_bi=$(($current_bi-$last_bi))
+    diff_bo=$(($current_bo-$last_bo))
+    curr_bi=$(($diff_bi/$sleep_time))
+    curr_bo=$(($diff_bo/$sleep_time))
+
+    if [ $cur_loops == $report_loops ]; then
+      netInAvg=$((($current_bi-$init_bi)/$report_time))
+      netOutAvg=$((($current_bo-$init_bo)/$report_time))
+      echo "6 netInMin $netInMin netInMax $netInMax netInAvg $netInAvg netOutMin $netOutMin netOutMax $netOutMax netOutAvg $netOutAvg"
+      netInMin=-1
+      netInMax=0
+      netOutMin=-1
+      netOutMax=0
+      cur_loops=0
+      init_bi=$current_bi
+      init_bo=$current_bo
+    else
+      if [ $curr_bi -gt $netInMax ]; then
+        netInMax=$curr_bi
+      elif [ $curr_bi -lt $netInMin -o $netInMin -eq -1 ]; then
+        netInMin=$curr_bi
+      fi
+
+      if [ $curr_bo -gt $netOutMax ]; then
+        netOutMax=$curr_bo
+      elif [ $curr_bo -lt $netOutMin -o $netOutMin -eq -1 ]; then
+        netOutMin=$curr_bo
+      fi
+
+      cur_loops=$(($cur_loops+1))
+    fi
+  fi
+
+  last_bi=$current_bi
+  last_bo=$current_bo
+
+  sleep $sleep_time
+done
