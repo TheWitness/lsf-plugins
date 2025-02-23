@@ -1,6 +1,6 @@
 <cacti>	
 	<hash_000103a1a32f244e6d333d72df6d0c0b38e3d2>
-		<name>GRID - Host Context Switches</name>
+		<name>GRID - Host - Context Switches</name>
 		<multiple></multiple>
 		<test_source></test_source>
 		<graph>
@@ -317,7 +317,7 @@
 		</inputs>
 	</hash_000103a1a32f244e6d333d72df6d0c0b38e3d2>
 	<hash_0101034aba6a88741f4009d0f531477f848e3d>
-		<name>GRID - Host Context Switches</name>
+		<name>GRID - Host - Context Switches</name>
 		<ds>
 			<t_name></t_name>
 			<name>|host_description| - Context Switches</name>
@@ -385,9 +385,9 @@
 		</data>
 	</hash_0101034aba6a88741f4009d0f531477f848e3d>
 	<hash_0301035e200df979018f8d4eed44349df3bf79>
-		<name>GRID - Host Context Switches</name>
+		<name>GRID - Host - Context Switches</name>
 		<type_id>5</type_id>
-		<input_string>PHBhdGhfY2FjdGk+L3NjcmlwdHMvc3NfZ3JpZF9ob3N0X2Nzcy5waHAgPGhvc3RuYW1lPiA8Y2x1c3RlcmlkPg==</input_string>
+		<input_string>PHBhdGhfY2FjdGk+L3NjcmlwdHMvc3NfZ3JpZF9ob3N0X2Nzcy5waHAgc3NfZ3JpZF9ob3N0X2NzcyA8aG9zdG5hbWU+IDxjbHVzdGVyaWQ+</input_string>
 		<fields>
 			<hash_070103efe27d27cf168f54dbbf9cecd4bb7e4e>
 				<name>The Hostname of the Host to be queried</name>
