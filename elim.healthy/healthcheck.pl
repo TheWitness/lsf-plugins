@@ -18,9 +18,10 @@
 #              hangs, the elim will still be able to report a bad health
 #              to LSF.
 #
-# Options:     --all        Run all tests.  Recommended
-#              --log=F      Write log messages to this file
-#              --timeout=N  Timeout each test after X seconds
+# Options:     -all        Run all tests.  Recommended
+#              -log=F      Write log messages to this file
+#              -timeout=N  Timeout each test after X seconds
+#              -v          Verbose output
 # -----------------------------------------------------------------------------
 use Getopt::Long; 
 
