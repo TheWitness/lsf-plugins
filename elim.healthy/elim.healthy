@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# -----------------------------------------------------------------------------
+# Place the healthcheck script and elim in the LSF common directory for
+# all clusters.
+# -----------------------------------------------------------------------------
+HEALTH_DIR=$(pwd)
+HEALTHCHECK=${HEALTH_DIR}/healthcheck.pl
+
+# -----------------------------------------------------------------------------
+# Check the health of hosts this frequently
+# -----------------------------------------------------------------------------
+SLEEP_TIME=60
+
+# -----------------------------------------------------------------------------
+# Uncomment to debug
+# set -x
+# -----------------------------------------------------------------------------
+
+while true; do
+  # ---------------------------------------------------------------------------
+  # Run the healthcheck
+  # ---------------------------------------------------------------------------
+  `$HEALTHCHECK -log /tmp/healthcheck.log -all $@ 1>/dev/null 2>&1`
+
+  error=$?
+  
+  if [ $error -eq 0 ]; then
+    echo "1 healthy 1";
+  else
+    echo "1 healthy 0";
+  fi
+
+  sleep $SLEEP_TIME;
+done
+
+exit 0
