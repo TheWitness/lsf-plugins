@@ -26,7 +26,7 @@ The output of the ELIM can be used for many purposes including:
 
 For example, you can do the following:
 
-	bsub -R "select[healthy]" ./a.out
+	bsub -R "select[healthy == ok]" ./a.out
 
 To always dispatch to a healthy host.  Putting this at the queue
 level is always the best as it will always dictate the dispatch

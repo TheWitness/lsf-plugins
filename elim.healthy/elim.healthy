@@ -26,9 +26,9 @@ while true; do
   error=$?
   
   if [ $error -eq 0 ]; then
-    echo "1 healthy 1";
+    echo "1 healthy ok";
   else
-    echo "1 healthy 0";
+    echo "1 healthy not_ok";
   fi
 
   sleep $SLEEP_TIME;
