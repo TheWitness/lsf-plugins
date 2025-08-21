@@ -1,0 +1,4 @@
+Begin Resource
+RESOURCENAME    TYPE     INTERVAL INCREASING CONSUMABLE   DESCRIPTION
+healthy         String   60       ()         ()           (custom resource for the health of the host)
+End Resource
