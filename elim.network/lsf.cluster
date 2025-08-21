@@ -1,0 +1,9 @@
+Begin ResourceMap
+RESOURCENAME  LOCATION
+netInAvg        [default]
+netInMin        [default]
+netInMax        [default]
+netOutAvg       [default]
+netOutMin       [default]
+netOutMax       [default]
+End ResourceMap
