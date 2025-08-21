@@ -1,0 +1,7 @@
+Begin Resource
+RESOURCENAME  TYPE     INTERVAL INCREASING CONSUMABLE DESCRIPTION
+cssMin        Numeric  60       Y          ()         (Minimum Context Switches per Second)
+cssMax        Numeric  60       Y          ()         (Maximum Context Switches per Second)
+cssAvg        Numeric  60       Y          ()         (Average Context Switches per Second)
+End Resource
+
