@@ -1,0 +1,7 @@
+Begin Resource
+RESOURCENAME  TYPE     INTERVAL INCREASING CONSUMABLE DESCRIPTION
+workdirTotal  Numeric  15       Y          ()         (Total Workdir Space in GBytes)
+workdirUsed   Numeric  15       Y          ()         (Used Workdir Space in GBytes)
+workdirAvail  Numeric  15       Y          ()         (Available Workdir Space in GBytes)
+End Resource
+

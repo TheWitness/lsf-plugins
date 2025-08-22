@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# ----------------------------------------------
+# Run only on the LSF Master
+# ----------------------------------------------
+if [[ -v LSF_MASTER && $LSF_MASTER == "Y" ]]; then
+  LSB_SHAREDIR=$(cat $LSF_ENVDIR/lsf.conf | grep LSB_SHAREDIR | awk -F"=" '{print $2}')
+  while true; do
+    # ----------------------------------------------
+    # Get the Statistics from the OS
+    # ----------------------------------------------
+    stats=$(df -k $LSB_SHAREDIR | grep -v Filesystem)
+    total=$(echo $stats | awk '{print $2}')
+    used=$(echo $stats | awk '{print $3}')
+    available=$(echo $stats | awk '{print $4}')
+
+    # ----------------------------------------------
+    # Convert the data to GBytes
+    # ----------------------------------------------
+    total=$(awk "BEGIN {printf \"%.2f\", $total / (1024 * 1024)}")
+    used=$(awk "BEGIN {printf \"%.2f\", $used / (1024 * 1024)}")
+    available=$(awk "BEGIN {printf \"%.2f\", $available / (1024 * 1024)}")
+
+    echo "3 workdirTotal $total workdirUsed $used workdirAvail $available"
+    sleep 10
+  done
+else
+  exit $ELIM_ABORT_VALUE
+fi

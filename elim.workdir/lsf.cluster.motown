@@ -1,0 +1,6 @@
+Begin ResourceMap
+RESOURCENAME  LOCATION
+workdirTotal    [all]
+workdirUsed     [all]
+workdirAvail    [all]
+End ResourceMap
